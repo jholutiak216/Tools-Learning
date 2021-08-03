@@ -77,6 +77,40 @@ void UMyAssetActionUtility::CheckPowerOfTwo()
 
 #pragma endregion
 
+#pragma region AddPreFix
+
+void UMyAssetActionUtility::AddPrefix()
+{
+   TArray<UObject*> SelectedObjects = UEditorUtilityLibrary::GetSelectedAssets();
+
+   uint32 Counter = 0;
+
+   for (UObject* SelectedObject : SelectedObjects)
+   {
+      if (ensure(SelectedObject))
+      {
+         const FString* Prefix = PrefixMap.Find(SelectedObject->GetClass());
+         if (ensure(Prefix) && !Prefix->Equals(""))
+         {
+            FString OldName = SelectedObject->GetName();
+            if (!OldName.StartsWith(*Prefix))
+            {
+               FString NewName = *Prefix + OldName;
+               UEditorUtilityLibrary::RenameAsset(SelectedObject, NewName);
+               ++Counter;
+            }
+         }
+         else
+         {
+            PrintToScreen("Couldn't Find Prefix for class " + SelectedObject->GetClass()->GetName(), FColor::Red);
+         }
+      }
+   }
+   GiveFeedback("Added Prefix to ", Counter);
+}
+
+#pragma endregion
+
 #pragma region Helper
 
 bool UMyAssetActionUtility::IsPowerofTwo(int32 NumberToCheck)

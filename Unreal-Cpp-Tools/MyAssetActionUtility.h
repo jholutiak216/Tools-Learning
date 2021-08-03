@@ -21,7 +21,18 @@ public:
 	UFUNCTION(CallInEditor)
 	void CheckPowerOfTwo();
 
+	UFUNCTION(CallInEditor)
+	void AddPrefix();
+
 private:
+
+	const TMap<UClass*, FString> PrefixMap = {
+		{UBlueprint::StaticClass(), TEXT("BP_")},
+		{UMaterial::StaticClass(), TEXT("M_")},
+		{UTexture::StaticClass(), TEXT("T_")},
+		{UTexture2D::StaticClass(), TEXT("T_")}
+	};
+
 	bool IsPowerofTwo(int32 NumberToCheck);
 
 	void PrintToScreen(FString Message, FColor Color);
